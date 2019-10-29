@@ -39,6 +39,7 @@ public class ShapeRunner {
     public static ArrayList<Shape> createShapeList() {
         ArrayList<Shape> shapes = new ArrayList<>();
         // TODO create all the shapes and add them to the list
+        shapes.add(new Parallelogram(3,3,6,6));
         return shapes;
     }
 
