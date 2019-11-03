@@ -31,7 +31,13 @@ public class ShapeRunner {
     public static ArrayList<Shape> createShapeList() {
         ArrayList<Shape> shapes = new ArrayList<>();
         // TODO create all the shapes and add them to the list
+
+        shapes.add(createOval());
         return shapes;
+    }
+
+    private static Shape createOval() {
+        return new Oval(15.75, 12.25);
     }
 
     /**
