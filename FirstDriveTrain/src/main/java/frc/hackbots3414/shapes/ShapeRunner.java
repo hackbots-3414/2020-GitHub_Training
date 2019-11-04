@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class ShapeRunner {
 
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
         ArrayList<Shape> shapeList = createShapeList();
         for (int listIndex = 0; listIndex < shapeList.size(); listIndex ++) {
             printShape(shapeList.get(listIndex));
@@ -39,6 +39,7 @@ public class ShapeRunner {
     public static ArrayList<Shape> createShapeList() {
         ArrayList<Shape> shapes = new ArrayList<>();
         // TODO create all the shapes and add them to the list
+        //shapes.add(new Rhombus());
         return shapes;
     }
 
@@ -46,6 +47,18 @@ public class ShapeRunner {
      * Dump a shape to console
      * @param shape
      */
+
+    public static void main(String[] args){
+        Rhombus rhombus1 = new Rhombus(5, 7, 7);
+        double area = rhombus1.getArea();
+        double perimeter = rhombus1.getPerimeter();
+        String name = rhombus1.getName();
+        System.out.println("Area = " +  area);
+        System.out.println("Perimeter = " +  perimeter);
+        System.out.println("Name = " +  name);
+
+    }
+
     public static void printShape(Shape shape) {
         if (shape == null) {
             System.out.println("Shape was null!");
