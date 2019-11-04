@@ -6,9 +6,9 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.hackbots3414.shapes;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
 
 /**
  * Way to test out Shape instances and other fun stuff
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class ShapeRunner {
 
     public static void main(String[] args) {
-        ArrayList<Shape> shapeList = createShapeList();
+      /*  ArrayList<Shape> shapeList = createShapeList();
         for (int listIndex = 0; listIndex < shapeList.size(); listIndex ++) {
             printShape(shapeList.get(listIndex));
         }
@@ -27,7 +27,10 @@ public class ShapeRunner {
         System.out.println(2==3);
         System.out.println("2"=="2");
         System.out.println("2".equals(String.valueOf(2)));
-        System.out.println("2"== String.valueOf(2));
+        System.out.println("2"== String.valueOf(2)); */
+        Parallelogram boxy = new Parallelogram(10, 10, 40, 40);
+        System.out.println("Perimeter: " + boxy.getPerimeter());
+        System.out.println("Area: " + boxy.getArea());
     }
 
     /**

@@ -7,6 +7,8 @@
 
 package frc.hackbots3414.shapes;
 
+
+
 /**
  * Add your docs here.
  */
@@ -38,6 +40,6 @@ public class Parallelogram implements Shape {
     @Override
     public double getArea() {
         // TODO Auto-generated method stub
-        return 0;
+        return (leftLength*topLength);
     }
 }
