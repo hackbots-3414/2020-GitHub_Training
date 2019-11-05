@@ -6,9 +6,9 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.hackbots3414.shapes;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
 
 /**
  * Way to test out Shape instances and other fun stuff
@@ -16,11 +16,12 @@ import java.util.ArrayList;
 public class ShapeRunner {
 
     public static void main2(String[] args) {
-        ArrayList<Shape> shapeList = createShapeList();
-        for (int listIndex = 0; listIndex < shapeList.size(); listIndex ++) {
-            printShape(shapeList.get(listIndex));
-        }
+      
+        
         System.out.println("Hello "+"World");
+
+        /*System.out.println("Hello Colin");
+>>>>>>> origin/shape-master
         System.out.println("2"+"2");
         System.out.println(2+2);
         System.out.println(2==2);
@@ -28,6 +29,8 @@ public class ShapeRunner {
         System.out.println("2"=="2");
         System.out.println("2".equals(String.valueOf(2)));
         System.out.println("2"==(String.valueOf(2)));
+        System.out.println("2"== String.valueOf(2)); */
+        
     }
 
     /**
@@ -40,9 +43,8 @@ public class ShapeRunner {
         ArrayList<Shape> shapes = new ArrayList<>();
         // TODO create all the shapes and add them to the list
 
-        //shapes.add(new Rhombus());
-
-
+        shapes.add(new Rhombus(5, 7, 7));
+         shapes.add(new Parallelogram(10, 10, 40, 40));
         shapes.add(createOval());
         return shapes;
     }
@@ -57,6 +59,10 @@ public class ShapeRunner {
      */
 
     public static void main(String[] args){
+        ArrayList<Shape> shapeList = createShapeList();
+        for (int listIndex = 0; listIndex < shapeList.size(); listIndex ++) {
+            printShape(shapeList.get(listIndex));
+        }
         Rhombus rhombus1 = new Rhombus(5, 7, 7);
         double area = rhombus1.getArea();
         double perimeter = rhombus1.getPerimeter();
@@ -81,5 +87,6 @@ public class ShapeRunner {
         DecimalFormat formatter = new DecimalFormat("#####.00");
         System.out.println(", formatted perimeter: " + formatter.format(shape.getPerimeter()));
         System.out.println("------------------------------");
+        
     }
 }
