@@ -28,7 +28,7 @@ public class Parallelogram implements Shape {
     @Override
     public String getName() {
         // TODO Auto-generated method stub
-        return null;
+        return "Parallelogram";
     }
 
     @Override
