@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  */
 public class Robot extends TimedRobot {
   private final DifferentialDrive m_robotDrive
-      = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
+      = new DifferentialDrive(new DoubleMotors(3,2), new DoubleMotors(1,0));
   private final Joystick m_stick = new Joystick(0);
   private final Timer m_timer = new Timer();
 
