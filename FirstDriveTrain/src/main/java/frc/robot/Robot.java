@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
@@ -14,6 +16,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -22,11 +26,20 @@ import edu.wpi.first.wpilibj.SPI;
  * directory.
  */
 public class Robot extends TimedRobot {
+  Joystick left = new Joystick(0);
+  Joystick right = new Joystick(1);
+  WPI_TalonSRX leftFront = new WPI_TalonSRX(4);
+  WPI_TalonSRX leftBack = new WPI_TalonSRX(5);
+  WPI_TalonSRX rightFront = new WPI_TalonSRX(1);
+  WPI_TalonSRX rightBack = new WPI_TalonSRX(2);
+  SpeedControllerGroup leftGroup = new SpeedControllerGroup(leftFront, leftBack);
+  SpeedControllerGroup rightGroup = new SpeedControllerGroup(rightFront, rightBack);
   private final DifferentialDrive m_robotDrive
-      = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
-  private final Joystick m_stick = new Joystick(0);
+  = new DifferentialDrive(rightGroup, leftGroup);
   private final Timer m_timer = new Timer();
   private AHRS navx = new AHRS(SPI.Port.kMXP);
+
+  
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -69,7 +82,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    m_robotDrive.arcadeDrive(m_stick.getY(), m_stick.getX());
     System.out.println("================================");
     System.out.println("board yaw axis: " + navx.getBoardYawAxis());
     System.out.println("compass heading: " + navx.getCompassHeading());
@@ -78,6 +90,7 @@ public class Robot extends TimedRobot {
     System.out.println("quaternion y: " + navx.getQuaternionY());
     System.out.println("quaternion z: " + navx.getQuaternionZ());
     System.out.println("================================");
+    m_robotDrive.tankDrive(left.getY(), right.getY());
   }
 
   /**
