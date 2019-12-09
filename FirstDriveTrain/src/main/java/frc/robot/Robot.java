@@ -88,6 +88,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     m_robotDrive.arcadeDrive(m_stick.getY(), m_stick.getX());
+    System.out.println("---------------------------------");
+    System.out.println("navx.getAngle(): "+navx.getAngle());
+    System.out.println("navx.getRate(): "+navx.getRate());
+    System.out.println("navx.getCompassHeading(): "+navx.getCompassHeading());
   }
 
   /**
