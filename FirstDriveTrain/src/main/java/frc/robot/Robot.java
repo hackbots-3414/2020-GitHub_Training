@@ -7,6 +7,13 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -21,11 +28,31 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  * directory.
  */
 public class Robot extends TimedRobot {
-  private final DifferentialDrive m_robotDrive
-      = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
+
+  
   private final Joystick m_stick = new Joystick(0);
   private final Timer m_timer = new Timer();
+  private AHRS navx = new AHRS(SPI.Port.kMXP);
+  Joystick left = new Joystick(0);
+  Joystick right = new Joystick(0);
+  WPI_TalonSRX leftFront = new WPI_TalonSRX(2);
+  WPI_TalonSRX rightFront = new WPI_TalonSRX(4);
+  WPI_TalonSRX leftBack = new WPI_TalonSRX(1);
+  WPI_TalonSRX rightBack = new WPI_TalonSRX(5);
+  SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftFront, leftBack);
+  SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightFront, rightBack);
+
+  private final DifferentialDrive m_robotDrive
+      = new DifferentialDrive(leftMotors, rightMotors);
+
+
+
+
+
   
+
+
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -52,7 +79,7 @@ public class Robot extends TimedRobot {
     if (m_timer.get() < 2.0) {
       m_robotDrive.arcadeDrive(0.5, 0.0); // drive forwards half speed
     } else {
-      m_robotDrive.stopMotor(); // stop robot
+      m_robotDrive.stopMotor(); // stop r+obot
     }
   }
 
@@ -69,6 +96,16 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     m_robotDrive.arcadeDrive(m_stick.getY(), m_stick.getX());
+    System.out.println("=============================");
+    System.out.println(navx.getCompassHeading());
+    System.out.println(navx.getBoardYawAxis());
+    System.out.println(navx.getQuaternionW());
+    System.out.println(navx.getQuaternionX());
+    System.out.println(navx.getQuaternionY());
+    System.out.println(navx.getQuaternionZ());
+    System.out.println("=============================");
+
+
   }
 
   /**
@@ -78,3 +115,5 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 }
+
+
