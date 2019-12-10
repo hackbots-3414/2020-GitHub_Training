@@ -92,15 +92,28 @@ public class Robot extends TimedRobot {
     System.out.println("quaternion z: " + navx.getQuaternionZ());
     System.out.println("================================");
     m_robotDrive.tankDrive(leftJoy.getY(), rightJoy.getY());
-    if(leftJoy.getRawButton(1)){
-      figure8++;
+    /* if(rightJoy.getRawButton(1)){
+      navx.reset();
+      while((navx.pidGet()) < 90.0 ){
+       m_robotDrive.tankDrive(0.2, -0.2);
+      }
     }
-    while(figure8%2 == 1){
-      navx.setAngleAdjustment(0);
-      navx.getAngle();
+    if(leftJoy.getRawButton(1)){
+      navx.reset();
+      while(( navx.pidGet()) > -90.0 ){
+       m_robotDrive.tankDrive(-0.2, 0.2);
+      }
+    }*/
+    System.out.println(rightJoy.getRawButton(1));
+    if(rightJoy.getRawButton(1)){
+      System.out.println("I'm inside");
+      m_robotDrive.tankDrive(0.1, 0.1);
+      if(leftJoy.getRawButton(1)){
+        m_robotDrive.tankDrive(0, 0);
+      }
+      
     }
   }
-
   /**
    * This function is called periodically during test mode.
    */
