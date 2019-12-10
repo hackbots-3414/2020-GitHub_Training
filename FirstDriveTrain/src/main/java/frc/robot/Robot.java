@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -45,9 +47,12 @@ public class Robot extends TimedRobot {
   private final DifferentialDrive m_robotDrive
       = new DifferentialDrive(leftMotors, rightMotors);
 
+      static final double KP = 0.03;
+      static final double KI =  0.00;
+      static final double KD = 0.00;
+      static final double KF = 0.00;
 
-
-
+      static final double KToleranceDegrees = 1.50f;
 
   
 
@@ -97,13 +102,21 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     m_robotDrive.arcadeDrive(m_stick.getY(), m_stick.getX());
     System.out.println("=============================");
-    System.out.println(navx.getCompassHeading());
-    System.out.println(navx.getBoardYawAxis());
-    System.out.println(navx.getQuaternionW());
-    System.out.println(navx.getQuaternionX());
-    System.out.println(navx.getQuaternionY());
-    System.out.println(navx.getQuaternionZ());
+    System.out.println("navx.getCompassHeading(): " + navx.getCompassHeading());
+    System.out.println("navx.getBoardYawAxis" + navx.getBoardYawAxis());
+    System.out.println("navx.getQuaternionW" + navx.getQuaternionW());
+    System.out.println("navx.getQuaternionX" +navx.getQuaternionX());
+    System.out.println("navx.getQuaternionY" +navx.getQuaternionY());
+    System.out.println("navx.getQuaternionZ" + navx.getQuaternionZ());
     System.out.println("=============================");
+
+
+    
+      
+    }
+
+
+
 
 
   }
@@ -115,5 +128,3 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 }
-
-
