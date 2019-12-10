@@ -67,12 +67,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    // Drive for 2 seconds
-    if (m_timer.get() < 2.0) {
-      m_robotDrive.arcadeDrive(0.5, 0.0); // drive forwards half speed
-    } else {
-      m_robotDrive.stopMotor(); // stop robot
-    }
+    robotsTurn();
   }
 
   /**
@@ -99,5 +94,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+  }
+  public void robotsTurn() {
+    double startingAngle = navx.getAngle();
+    double endingAngle = startingAngle + 90;
+    m_robotDrive.stopMotor();
+
+    while(navx.getAngle() < endingAngle){
+      m_robotDrive.arcadeDrive(0,0.5);
+    } 
+    m_robotDrive.stopMotor();
   }
 }
