@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -29,7 +30,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobot implements PIDOutput {
 
   
   private final Joystick m_stick = new Joystick(0);
@@ -43,21 +44,22 @@ public class Robot extends TimedRobot {
   WPI_TalonSRX rightBack = new WPI_TalonSRX(5);
   SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftFront, leftBack);
   SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightFront, rightBack);
+  AHRS ahrs = new AHRS(SPI.Port.kMXP);
+  boolean rotateToAngleRate;
+
 
   private final DifferentialDrive m_robotDrive
       = new DifferentialDrive(leftMotors, rightMotors);
 
       static final double KP = 0.03;
-      static final double KI =  0.00;
+      static final double KI = 0.00;
       static final double KD = 0.00;
       static final double KF = 0.00;
-
-      static final double KToleranceDegrees = 1.50f;
-
-  
+      static final double kToleranceDegrees = 2.0f;
 
 
 
+      
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -95,6 +97,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
   }
 
+
   /**
    * This function is called periodically during teleoperated mode.
    */
@@ -109,22 +112,61 @@ public class Robot extends TimedRobot {
     System.out.println("navx.getQuaternionY" +navx.getQuaternionY());
     System.out.println("navx.getQuaternionZ" + navx.getQuaternionZ());
     System.out.println("=============================");
-
+    PIDController turnController = new PIDController(KP, KI, KD, KF,ahrs,this);
+    turnController.setInputRange(-180.0f,180.0f);
+    turnController.setOutputRange(-.50,.50);
+    turnController.setAbsoluteTolerance(kToleranceDegrees);
+    turnController.setContinuous(true);
+    if (m_stick.getRawButton(1)){
+      ahrs.reset();
+    }
+    if (m_stick.getRawButton(2)){
+      turnController.setSetpoint(0.0f);
+      rotateToAngleRate = true;
+    }
+    else if (m_stick.getRawButton(3)) {
+      turnController.setSetpoint(90f);
+    }
+    else if(m_stick.getRawButton(4)){
+      turnController.setSetpoint(180f);
+      rotateToAngleRate = true;
+    }
+    else if(m_stick.getRawButton(5)){
+      turnController.setSetpoint(-90f);
+    }
+    double CurrentRotationRate;
+    if (rotateToAngleRate){
+      turnController.enable();
+      CurrentRotationRate = rotateToAngleRate;
+    }
+    else{
+      turnController.disable();
+      CurrentRotationRate = m_stick.getTwist();
+    }
+    m_robotDrive.arcadeDrive(0,.50);
+  }
 
     
-      
+
+
+
+    public void robotTurn(){
+       double startingAngle = ahrs.getAngle();
+       double endingAngle = startingAngle+90;
+       double endingAngle2 =  startingAngle+180;
     }
 
-
-
-
-
-  }
-
-  /**
-   * This function is called periodically during test mode.
-   */
   @Override
-  public void testPeriodic() {
+  public void pidWrite(double output) {
+    rotateToAngleRate = output;
+
   }
-}
+
+    
+    
+
+  }
+
+
+
+ 
