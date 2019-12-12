@@ -10,9 +10,6 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.SPI;
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,6 +19,10 @@ import edu.wpi.first.wpilibj.SPI;
  * directory.
  */
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
 public class Robot extends TimedRobot {
 
   private final Joystick m_stick = new Joystick(0);
@@ -37,7 +38,7 @@ public class Robot extends TimedRobot {
   SpeedControllerGroup rightGroup = new SpeedControllerGroup(rightFront, rightBack);
   private final DifferentialDrive m_robotDrive
   = new DifferentialDrive(leftGroup,rightGroup);
-  int figure8 = 0;
+  double figure8 = 0;
 
     /**
    * This function is run when the robot is first started up and should be
@@ -81,6 +82,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    
     leftGroup.setInverted(true);
     rightGroup.setInverted(true);
     System.out.println("================================");
@@ -92,26 +94,30 @@ public class Robot extends TimedRobot {
     System.out.println("quaternion z: " + navx.getQuaternionZ());
     System.out.println("================================");
     m_robotDrive.tankDrive(leftJoy.getY(), rightJoy.getY());
-    /* if(rightJoy.getRawButton(1)){
+     if(rightJoy.getRawButton(1)){
       navx.reset();
-      while((navx.pidGet()) < 90.0 ){
+      while(figure8 < 5.0 ){
+      figure8 = navx.pidGet();
        m_robotDrive.tankDrive(0.2, -0.2);
       }
+      m_robotDrive.tankDrive(0, 0);
     }
     if(leftJoy.getRawButton(1)){
       navx.reset();
-      while(( navx.pidGet()) > -90.0 ){
+      while( figure8 > -5.0 ){
+        figure8 = navx.pidGet();
        m_robotDrive.tankDrive(-0.2, 0.2);
       }
-    }*/
-    System.out.println(rightJoy.getRawButton(1));
-    if(rightJoy.getRawButton(1)){
+      m_robotDrive.tankDrive(0, 0);
+    }
+    System.out.println(rightJoy.getRawButton(2));
+    if(rightJoy.getRawButton(2)){
       System.out.println("I'm inside");
       m_robotDrive.tankDrive(0.1, 0.1);
-      if(leftJoy.getRawButton(1)){
+      if(leftJoy.getRawButton(2)){
         m_robotDrive.tankDrive(0, 0);
       }
-      
+      m_robotDrive.tankDrive(0, 0);
     }
   }
   /**
