@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Talon;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+//import jdk.tools.jlink.resources.plugins;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -45,7 +47,13 @@ public class Robot extends TimedRobot implements PIDOutput {
   SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftFront, leftBack);
   SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightFront, rightBack);
   AHRS ahrs = new AHRS(SPI.Port.kMXP);
-  boolean rotateToAngleRate;
+  double rotateToAngleRate;
+  boolean rotateToAngleRate2;
+  PIDController turnController = new PIDController(KP, KI, KD, KF,ahrs,this);
+  double CurrentRotationRate;
+
+
+
 
 
   private final DifferentialDrive m_robotDrive
@@ -66,6 +74,10 @@ public class Robot extends TimedRobot implements PIDOutput {
    */
   @Override
   public void robotInit() {
+    turnController.setInputRange(-180.0f,180.0f);
+    turnController.setOutputRange(-.50,.50);
+    turnController.setAbsoluteTolerance(kToleranceDegrees);
+    turnController.setContinuous(true);
   }
 
   /**
@@ -96,8 +108,29 @@ public class Robot extends TimedRobot implements PIDOutput {
   @Override
   public void teleopInit() {
   }
+  public void setSetPoint(){
+    turnController.setSetpoint(0.0f);
+      rotateToAngleRate2 = true;
+  }
+  public void turn90Degrees(){
+    turnController.setSetpoint(90f);
+  }
+  public void turn180Degrees(){
+    rotateToAngleRate2 = true;
 
-
+  }
+  public void turnNegative90Degrees() {
+    
+  }
+  public void enableTheTurnController() {
+    turnController.enable();
+      CurrentRotationRate = rotateToAngleRate;
+    
+  }
+  public void turnControllerDisable() {
+    turnController.disable();
+    CurrentRotationRate = m_stick.getTwist();
+  }
   /**
    * This function is called periodically during teleoperated mode.
    */
@@ -112,39 +145,31 @@ public class Robot extends TimedRobot implements PIDOutput {
     System.out.println("navx.getQuaternionY" +navx.getQuaternionY());
     System.out.println("navx.getQuaternionZ" + navx.getQuaternionZ());
     System.out.println("=============================");
-    PIDController turnController = new PIDController(KP, KI, KD, KF,ahrs,this);
-    turnController.setInputRange(-180.0f,180.0f);
-    turnController.setOutputRange(-.50,.50);
-    turnController.setAbsoluteTolerance(kToleranceDegrees);
-    turnController.setContinuous(true);
+    
     if (m_stick.getRawButton(1)){
       ahrs.reset();
     }
     if (m_stick.getRawButton(2)){
-      turnController.setSetpoint(0.0f);
-      rotateToAngleRate = true;
+      setSetPoint();
     }
     else if (m_stick.getRawButton(3)) {
-      turnController.setSetpoint(90f);
+      turn90Degrees();
     }
     else if(m_stick.getRawButton(4)){
-      turnController.setSetpoint(180f);
-      rotateToAngleRate = true;
+      turn180Degrees();
     }
     else if(m_stick.getRawButton(5)){
-      turnController.setSetpoint(-90f);
+      turnNegative90Degrees();
     }
-    double CurrentRotationRate;
-    if (rotateToAngleRate){
-      turnController.enable();
-      CurrentRotationRate = rotateToAngleRate;
+    if (rotateToAngleRate2){
+      enableTheTurnController();
     }
     else{
-      turnController.disable();
-      CurrentRotationRate = m_stick.getTwist();
+      turnControllerDisable();
     }
     m_robotDrive.arcadeDrive(0,.50);
   }
+  
 
     
 
@@ -153,7 +178,6 @@ public class Robot extends TimedRobot implements PIDOutput {
     public void robotTurn(){
        double startingAngle = ahrs.getAngle();
        double endingAngle = startingAngle+90;
-       double endingAngle2 =  startingAngle+180;
     }
 
   @Override
