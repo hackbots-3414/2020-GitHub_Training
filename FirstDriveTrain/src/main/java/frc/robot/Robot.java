@@ -29,11 +29,12 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 public class Robot extends TimedRobot {
   private final Joystick m_stick = new Joystick(0);
   private final Timer m_timer = new Timer();
-  private AHRS navx = new AHRS(SPI.Port.kMXP);
+  private final AHRS navx = new AHRS(SPI.Port.kMXP);
   WPI_TalonSRX leftFront = new WPI_TalonSRX(2);
   WPI_TalonSRX leftBack = new WPI_TalonSRX(1);
   WPI_TalonSRX rightFront = new WPI_TalonSRX(5);
   WPI_TalonSRX rightBack = new WPI_TalonSRX(4);
+  boolean initialPosition = true;
 
   Joystick left = new Joystick(0);
   Joystick right = new Joystick(1);
@@ -67,7 +68,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    robotsTurn();
+    
+
+    if(initialPosition) {
+      robotsTurn();
+      initialPosition = false;
+    }
   }
 
   /**
@@ -96,13 +102,15 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
   public void robotsTurn() {
-    double startingAngle = navx.getAngle();
-    double endingAngle = startingAngle + 90;
+    final double startingAngle = navx.getAngle();
+    final double endingAngle = startingAngle + 90;
     m_robotDrive.stopMotor();
 
     while(navx.getAngle() < endingAngle){
       m_robotDrive.arcadeDrive(0,0.5);
     } 
     m_robotDrive.stopMotor();
+
+    System.out.println("finished at ending angle "+endingAngle);
   }
 }
