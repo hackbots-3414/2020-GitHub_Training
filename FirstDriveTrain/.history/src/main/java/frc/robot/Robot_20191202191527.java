@@ -7,9 +7,12 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.SPI;
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -18,29 +21,13 @@ import edu.wpi.first.wpilibj.SPI;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-
 public class Robot extends TimedRobot {
-
+  private final DifferentialDrive m_robotDrive
+      = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
   private final Joystick m_stick = new Joystick(0);
   private final Timer m_timer = new Timer();
   private AHRS navx = new AHRS(SPI.Port.kMXP);
-  Joystick leftJoy = new Joystick(1);
-  Joystick rightJoy = new Joystick(0);
-  WPI_TalonSRX leftFront = new WPI_TalonSRX(1);
-  WPI_TalonSRX leftBack = new WPI_TalonSRX(2);
-  WPI_TalonSRX rightFront = new WPI_TalonSRX(4);
-  WPI_TalonSRX rightBack = new WPI_TalonSRX(5);
-  SpeedControllerGroup leftGroup = new SpeedControllerGroup(leftFront, leftBack);
-  SpeedControllerGroup rightGroup = new SpeedControllerGroup(rightFront, rightBack);
-  private final DifferentialDrive m_robotDrive
-  = new DifferentialDrive(leftGroup,rightGroup);
-  double figure8 = 0;
-
-    /**
+  /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
@@ -82,9 +69,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    
-    leftGroup.setInverted(true);
-    rightGroup.setInverted(true);
+    m_robotDrive.arcadeDrive(m_stick.getY(), m_stick.getX());
     System.out.println("================================");
     System.out.println("board yaw axis: " + navx.getBoardYawAxis());
     System.out.println("compass heading: " + navx.getCompassHeading());
@@ -93,33 +78,8 @@ public class Robot extends TimedRobot {
     System.out.println("quaternion y: " + navx.getQuaternionY());
     System.out.println("quaternion z: " + navx.getQuaternionZ());
     System.out.println("================================");
-    m_robotDrive.tankDrive(leftJoy.getY(), rightJoy.getY());
-     if(rightJoy.getRawButton(1)){
-      navx.reset();
-      while(figure8 < 5.0 ){
-      figure8 = navx.pidGet();
-       m_robotDrive.tankDrive(0.2, -0.2);
-      }
-      m_robotDrive.tankDrive(0, 0);
-    }
-    if(leftJoy.getRawButton(1)){
-      navx.reset();
-      while( figure8 > -5.0 ){
-        figure8 = navx.pidGet();
-       m_robotDrive.tankDrive(-0.2, 0.2);
-      }
-      m_robotDrive.tankDrive(0, 0);
-    }
-    System.out.println(rightJoy.getRawButton(2));
-    if(rightJoy.getRawButton(2)){
-      System.out.println("I'm inside");
-      m_robotDrive.tankDrive(0.1, 0.1);
-      if(leftJoy.getRawButton(2)){
-        m_robotDrive.tankDrive(0, 0);
-      }
-      m_robotDrive.tankDrive(0, 0);
-    }
   }
+
   /**
    * This function is called periodically during test mode.
    */
